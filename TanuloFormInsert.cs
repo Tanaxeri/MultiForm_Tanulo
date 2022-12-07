@@ -29,7 +29,17 @@ namespace MultiForm_Tanulo
         private void HozzaadButton_Click(object sender, EventArgs e)
         {
 
-            adatbazisInsert.Hozzaad();
+            if (adatbazisInsert.Hozzaad(InsertNev.Text, InsertTantargy.Text, (DateTime)InsertDatum.Value, InsertJelleg.Text, (int)InsertJegy.Value))
+            {
+
+                Program.tanuloFormInsert.InsertID.Text = "";
+                Program.tanuloFormInsert.InsertNev.Text = "";
+                Program.tanuloFormInsert.InsertTantargy.Text = "";
+                Program.tanuloFormInsert.InsertDatum.ResetText();
+                Program.tanuloFormInsert.InsertJelleg.Text = "";
+                Program.tanuloFormInsert.InsertJegy.Value = InsertJegy.Minimum;
+
+            }
 
         }
     }

@@ -12,6 +12,7 @@ namespace MultiForm_Tanulo
 {
     public partial class TanuloFormDelete : Form
     {
+        Adatbazis adatbazisDelete = new Adatbazis();
         public TanuloFormDelete()
         {
             InitializeComponent();
@@ -27,11 +28,24 @@ namespace MultiForm_Tanulo
 
             };
             TanuloAdat kivalasztottTanuloDel = (TanuloAdat)Program.nyitoForm.TanuloBox.SelectedItem;
+            DeleteID.Text = kivalasztottTanuloDel.Id.ToString();
             TorolNev.Text = kivalasztottTanuloDel.Nev;
             TorolTantargy.Text = kivalasztottTanuloDel.Tantargy;
             TorolDatum.Value = kivalasztottTanuloDel.Datum.Date;
             TorolJelleg.Text = kivalasztottTanuloDel.Jelleg;
             TorolJegy.Value = kivalasztottTanuloDel.Jegy;
+
+        }
+
+        private void TorolesButton_Click(object sender, EventArgs e)
+        {
+
+            if (adatbazisDelete.Torol(int.Parse(DeleteID.Text)))
+            {
+
+                Close();
+
+            }
 
         }
     }

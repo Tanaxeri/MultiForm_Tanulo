@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,102 +24,52 @@ namespace MultiForm_Tanulo
         private void újToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            if (nincsadat())
-            {
 
-                return;
-
-            }
             Program.tanuloFormInsert.ShowDialog();
+            adatbazisNyit.TanuloBox_ListBox_Update();
 
         }
 
         private void módosításToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            if (nincsadat())
-            {
-
-                return;
-
-            }
             Program.tanuloUpdate.ShowDialog();
+            adatbazisNyit.TanuloBox_ListBox_Update();
 
         }
 
         private void törlésToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            if (nincsadat())
-            {
-
-                return;
-
-            }
             Program.tanuloFormDelete.ShowDialog();
+            adatbazisNyit.TanuloBox_ListBox_Update();
 
         }
 
         private void TanulokBetoltese()
         {
 
-            TanuloBox.Items.Clear();
+            Program.nyitoForm.TanuloBox.Items.Clear();
             foreach (var item in adatbazisNyit.osszestanulo())
             {
 
-                TanuloBox.Items.Add(item);
+                Program.nyitoForm.TanuloBox.Items.Add(item);
 
             }
-
-        }
-
-        private bool nincsadat()
-        {
-            //Ellenőrzi hogy van-e adat
-            if (string.IsNullOrEmpty(NevText.Text))
-            {
-
-                MessageBox.Show("Adjon meg egy nevet!", "Hiányzó adat!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                NevText.Focus();
-                return true;
-
-            }
-            if (string.IsNullOrEmpty(TantargyText.Text))
-            {
-
-                MessageBox.Show("Adjon meg egy tantárgyat!", "Hiányzó adat!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                TantargyText.Focus();
-                return true;
-
-            }
-            if (string.IsNullOrEmpty(JellegText.Text))
-            {
-
-                MessageBox.Show("Adjon meg egy jelleget!", "Hiányzó adat!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                JellegText.Focus();
-                return true;
-
-            }
-            return false;
 
         }
 
         private void NyitoForm_Load(object sender, EventArgs e)
         {
 
+            adatbazisNyit.osszestanulo();
             TanulokBetoltese();
-            if (TanuloBox.SelectedIndex < 0)
+            if (Program.nyitoForm.TanuloBox.SelectedIndex < 0)
             {
 
                 return;
 
             };
-            TanuloAdat kivalasztottTanuloNyit = (TanuloAdat)TanuloBox.SelectedItem;
-            NevText.Text = kivalasztottTanuloNyit.Nev;
-            TantargyText.Text = kivalasztottTanuloNyit.Tantargy;
-            DatumTime.Value = kivalasztottTanuloNyit.Datum.Date;
-            JellegText.Text = kivalasztottTanuloNyit.Jelleg;
-            JegyNum.Value = kivalasztottTanuloNyit.Jegy;
 
         }
     }

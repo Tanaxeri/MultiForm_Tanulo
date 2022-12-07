@@ -22,7 +22,7 @@ namespace MultiForm_Tanulo
         private void TanuloFormUpdate_Load(object sender, EventArgs e)
         {
 
-            MessageBox.Show(Program.nyitoForm.NevText.Text + " adatainak a módosítása");
+            MessageBox.Show(Program.nyitoForm.TanuloBox.SelectedItem + " adatainak a módosítása");
 
             if (Program.nyitoForm.TanuloBox.SelectedIndex < 0)
             {
@@ -31,6 +31,7 @@ namespace MultiForm_Tanulo
 
             };
             TanuloAdat kivalasztottTanuloUpdate = (TanuloAdat)Program.nyitoForm.TanuloBox.SelectedItem;
+            UpdateID.Text = kivalasztottTanuloUpdate.Id.ToString();
             UpdateNev.Text = kivalasztottTanuloUpdate.Nev;
             UpdateTantargy.Text = kivalasztottTanuloUpdate.Tantargy;
             UpdateDatum.Value = kivalasztottTanuloUpdate.Datum.Date;
@@ -42,7 +43,12 @@ namespace MultiForm_Tanulo
         private void ModositButton_Click(object sender, EventArgs e)
         {
 
-            
+            if (adatbazisUpdate.Modosit(int.Parse(UpdateID.Text), UpdateNev.Text, UpdateTantargy.Text, (DateTime)UpdateDatum.Value, UpdateJelleg.Text, (int)UpdateJegy.Value))
+            {
+
+                
+
+            }
 
         }
     }

@@ -159,6 +159,7 @@
             this.TorolesButton.TabIndex = 21;
             this.TorolesButton.Text = "Törlés";
             this.TorolesButton.UseVisualStyleBackColor = true;
+            this.TorolesButton.Click += new System.EventHandler(this.TorolesButton_Click);
             // 
             // DeleteID
             // 
@@ -197,7 +198,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "TanuloFormDelete";
             this.Text = "TanuloFormDelete";
             this.Load += new System.EventHandler(this.TanuloFormDelete_Load);

@@ -16,7 +16,7 @@ namespace MultiForm_Tanulo
         MySqlCommand cmd;
         string hiba;
 
-        public Adatbazis(string server = "localhost", string user = "root", string password = "", string db = "tanulok")
+        public Adatbazis(string server = "localhost", string user = "root", string password = "", string db = "diakok")
         {
 
             conn = new MySqlConnection(kapcsolatString(server, user, password, db));
@@ -41,7 +41,7 @@ namespace MultiForm_Tanulo
         {
 
             List<TanuloAdat> list = new List<TanuloAdat>();
-            cmd.CommandText = "SELECT `id`, `nev`, `tantargy`, `datum`, `jelleg`, `jegy` FROM `tanulo` WHERE 1";
+            cmd.CommandText = "SELECT `id`, `nev`, `tantargy`, `datum`, `jelleg`, `jegy` FROM `diak` WHERE 1";
             if (kapcsolatNyit())
             {
 
@@ -64,16 +64,38 @@ namespace MultiForm_Tanulo
 
         }
 
-        public bool Hozzaad()
+        public void TanuloBox_ListBox_Update()
+        {
+            //Frissíti a ListBox-ot
+            Program.nyitoForm.TanuloBox.Items.Clear();
+            cmd.CommandText = "SELECT `id`, `nev`, `tantargy`, `datum`, `jelleg`, `jegy` FROM `diak` WHERE 1";
+            conn.Open();
+            using (MySqlDataReader dr = cmd.ExecuteReader())
+            {
+
+                while (dr.Read())
+                {
+
+                    TanuloAdat uj = new TanuloAdat(dr.GetInt32("id"), dr.GetString("nev"), dr.GetString("tantargy"), dr.GetDateTime("datum"), dr.GetString("jelleg"), dr.GetInt32("jegy"));
+                    Program.nyitoForm.TanuloBox.Items.Add(uj);
+
+                }
+
+            }
+            conn.Close();
+
+        }
+
+        public bool Hozzaad(string nev, string tantargy, DateTime datum, string jelleg, int jegy)
         {
 
-            cmd.CommandText = "INSERT INTO `tanulo` (`id`, `nev`, `tantargy`, `datum`, `jelleg`, `jegy`) VALUES (NULL, @nev, @tantargy, @datum, @jelleg, @jegy)";
+            cmd.CommandText = "INSERT INTO `diak` (`id`, `nev`, `tantargy`, `datum`, `jelleg`, `jegy`) VALUES (NULL, @nev, @tantargy, @datum, @jelleg, @jegy)";
             cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@nev", Program.tanuloFormInsert.InsertNev.Text);
-            cmd.Parameters.AddWithValue("@tantargy", Program.tanuloFormInsert.InsertTantargy.Text);
-            cmd.Parameters.AddWithValue("@datum", Program.tanuloFormInsert.InsertDatum.Value.ToString("yyyy-MM-dd"));
-            cmd.Parameters.AddWithValue("@jelleg", Program.tanuloFormInsert.InsertJelleg.Text);
-            cmd.Parameters.AddWithValue("@jegy", Program.tanuloFormInsert.InsertJegy.Value.ToString());
+            cmd.Parameters.AddWithValue("@nev", nev);
+            cmd.Parameters.AddWithValue("@tantargy", tantargy);
+            cmd.Parameters.AddWithValue("@datum", datum);
+            cmd.Parameters.AddWithValue("@jelleg", jelleg);
+            cmd.Parameters.AddWithValue("@jegy", jegy);
             kapcsolatNyit();
             try
             {
@@ -81,13 +103,7 @@ namespace MultiForm_Tanulo
                 if (cmd.ExecuteNonQuery() == 1)
                 {
 
-                    MessageBox.Show("Adatot sikeresen rögzítettük!", "Sikeres!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    Program.tanuloFormInsert.InsertID.Text = "";
-                    Program.tanuloFormInsert.InsertNev.Text = "";
-                    Program.tanuloFormInsert.InsertTantargy.Text = "";
-                    Program.tanuloFormInsert.InsertDatum.ResetText();
-                    Program.tanuloFormInsert.InsertJelleg.Text = "";
-                    Program.tanuloFormInsert.InsertJegy.Minimum = 0;
+                    MessageBox.Show("Adatot sikeresen rögzítettük!", "Sikeres!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);                   
 
                     return true;
                 }
@@ -111,6 +127,63 @@ namespace MultiForm_Tanulo
             kapcsolatZar();
 
             return true;
+
+        }
+
+        public bool Modosit(int id, string nev, string tantargy, DateTime datum, string jelleg, int jegy)
+        {
+
+            cmd.CommandText = "UPDATE `diak` SET `nev` = @nev, `tantargy` = @tantargy, `datum` = @datum, `jelleg` = @jelleg, `jegy` = @jegy WHERE `id` = @id";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@nev", nev);
+            cmd.Parameters.AddWithValue("@tantargy", tantargy);
+            cmd.Parameters.AddWithValue("@datum", datum);
+            cmd.Parameters.AddWithValue("@jelleg", jelleg);
+            cmd.Parameters.AddWithValue("@jegy", jegy);
+            kapcsolatNyit();
+            if (cmd.ExecuteNonQuery() == 1)
+            {
+
+                MessageBox.Show("Adatok módosítása sikeres volt!", "Sikeres!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return true;
+                kapcsolatZar();
+
+            }
+            else
+            {
+
+                MessageBox.Show("Az adatok módosítása sikertelen volt!", "Sikertelen!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+
+            }
+
+            return true;
+        }
+
+        public bool Torol(int id)
+        {
+
+            cmd.CommandText = "DELETE FROM `diak` WHERE `id` = @id";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@id", id);
+            kapcsolatNyit();
+            if (cmd.ExecuteNonQuery() == 1)
+            {
+
+                MessageBox.Show("Adat törlése sikeres volt!", "Sikeres!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return true;
+
+                kapcsolatZar();
+            }
+            else
+            {
+
+                MessageBox.Show("Az adat törlése sikertelen volt!", "Sikertelen!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+
+            }
 
         }
 
